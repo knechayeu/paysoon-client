@@ -5,7 +5,9 @@ const Profile = () => {
     const { user } = useTelegram();
     return (
         <Layout>
-            <h1>{user?.userName} - Писюн</h1>
+            <h1>{user?.username} - Писюн</h1>
+            <img src={user?.photo_url} alt="user photo" />
+            {JSON.stringify(user)}
 
         </Layout>
     );

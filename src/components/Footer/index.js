@@ -23,7 +23,7 @@ export const Footer = () => {
                 </Button>
             </Link>
 
-            <Link to="profile">
+            <Link to="/profile">
                 {user?.photo_url ? (
                     <img
                         className={styles.footer_profile}
