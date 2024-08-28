@@ -6,42 +6,5 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-top: 1px solid #486774;
-    box-shadow: 0px 10px 0px #eee, 0px 2px 5px #486774;
-    padding: 6px;
-
-    &_profile {
-        max-width: 50px;
-        border-radius: 5px;
-    }
-
-    &_button {
-        max-width: 42px;
-        height: 100%;
-
-        svg {
-            color: #fff;
-        }
-
-        &_create {
-            position: absolute !important;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 50% !important;
-            max-width: 40px;
-            min-width: auto !important;
-            background: #3a4f58 !important;
-            padding: 12px 28px !important;
-            box-shadow: 0 0 10px 2px #486774 !important;
-
-            svg {
-                font-size: 30px !important;
-            }
-        }
-
-        img {
-            border-radius: 50%;
-        }
-    }
+    width: 100%;
 }
