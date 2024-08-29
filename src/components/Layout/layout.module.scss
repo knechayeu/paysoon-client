@@ -1,7 +1,6 @@
 .layout {
     &_container {
         height: 93vh;
-        overflow: auto;
-        box-sizing: border-box;
+        position: relative;
     }
 }

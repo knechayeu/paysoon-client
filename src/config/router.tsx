@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import { Rooms, NewRoom, Profile } from '../pages';
+import { Rooms, NewRoom, Profile, Room, Friends } from '../pages';
 import { ERouter } from '../enums';
 
 export const router = createBrowserRouter([
@@ -18,6 +18,10 @@ export const router = createBrowserRouter([
   },
   {
     path: ERouter.Friends,
-    element: <Profile />,
+    element: <Friends />,
+  },
+  {
+    path: ERouter.Room,
+    element: <Room />,
   },
 ]);
