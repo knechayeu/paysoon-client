@@ -16,8 +16,16 @@ const App = () => {
   }, [colorMode]);
 
   useEffect(() => {
+    if (user?.id) {
+      userProfileStore.updateUser(user);
+    }
+  }, [user]);
+
+  useEffect(() => {
     tg.expand();
     tg.ready();
+    tg.setHeaderColor('#000');
+    tg.disableVerticalSwipes();
   }, [tg]);
 
   return <RouterProvider router={router} />;

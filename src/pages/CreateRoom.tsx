@@ -23,10 +23,10 @@ const CreateRoom = () => {
 
   return (
     <Layout>
-      <Box position="relative" pb={10} pt={10}>
+      <Box position="relative" mb={10}>
         <Divider />
-        <AbsoluteCenter px="4" bg="gray.800">
-          <Heading size="sm">Create new room</Heading>
+        <AbsoluteCenter px="0" bg="black">
+          <Heading size="md">Create new room</Heading>
         </AbsoluteCenter>
       </Box>
 

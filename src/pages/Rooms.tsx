@@ -6,6 +6,7 @@ import {
   CardHeader,
   Flex,
   Heading,
+  Icon,
   SimpleGrid,
   Text,
 } from '@chakra-ui/react';
@@ -15,14 +16,15 @@ import { Layout } from '../components';
 import { ERouter } from '../enums';
 import { useEffect } from 'react';
 import axios from 'axios';
-import { useTelegram } from '../hooks';
+import { useScroll, useTelegram } from '../hooks';
+import { AddIcon } from '@chakra-ui/icons';
 
 const Rooms = () => {
   const navigate = useNavigate();
+  const { showIcon } = useScroll();
   const { user } = useTelegram();
   const location = useLocation()?.search;
   const id = new URLSearchParams(location).get('tgWebAppStartParam');
-  console.log(location, id, 1)
 
   useEffect(() => {
     if (id) {
@@ -72,8 +74,14 @@ const Rooms = () => {
           ))}
         </SimpleGrid>
 
-        <Button size="lg" bg="teal" onClick={() => navigate('/create-room')}>
-          Create new Room
+        <Button
+          onClick={() => navigate('/create-room')}
+          colorScheme="teal"
+          position="fixed"
+          bottom="85px"
+          right="20px"
+        >
+          {showIcon ? <Icon as={AddIcon} /> : 'Создать комнату'}
         </Button>
       </Flex>
     </Layout>

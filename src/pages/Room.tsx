@@ -12,24 +12,26 @@ import {
   Button,
   Avatar,
   Badge,
-  ScaleFade,
   Fade,
   useDisclosure,
   Slide,
   IconButton,
   Input,
+  Icon,
 } from '@chakra-ui/react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Layout } from '../components';
-import { CloseIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon, CloseIcon } from '@chakra-ui/icons';
 
 const Room = () => {
   const { isOpen, onToggle } = useDisclosure();
+  const navigate = useNavigate();
   const location = useLocation()?.search;
   const name = new URLSearchParams(location).get('name');
 
   return (
     <Layout>
+      <Icon mb={4} onClick={() => navigate(-1)} as={ArrowBackIcon} w={7} h={7} />
       <Flex alignItems="flex-start" flexDirection="column" gap={4}>
         <Flex alignItems="center" gap={4}>
           <Image
@@ -43,7 +45,7 @@ const Room = () => {
             <Text fontSize="sm">Должники</Text>
           </Box>
         </Flex>
-        <Tabs w="100%" size="md" variant="enclosed">
+        <Tabs w="100%" isFitted size="md" colorScheme="teal" variant="enclosed">
           <TabList>
             <Tab>Settle up</Tab>
             <Tab>Two</Tab>
@@ -115,12 +117,11 @@ const Room = () => {
 
           <Flex flexDirection="column" gap={4}>
             <Heading>Add expense</Heading>
-            <Input variant='outline' placeholder='Outline' />
-            <Input variant='outline' placeholder='Outline' />
-            <Input variant='outline' placeholder='Outline' />
-            <Input variant='outline' placeholder='Outline' />
+            <Input variant="outline" placeholder="Outline" />
+            <Input variant="outline" placeholder="Outline" />
+            <Input variant="outline" placeholder="Outline" />
+            <Input variant="outline" placeholder="Outline" />
           </Flex>
-
         </Box>
       </Slide>
 
@@ -128,7 +129,7 @@ const Room = () => {
         onClick={onToggle}
         colorScheme="teal"
         position="fixed"
-        bottom="70px"
+        bottom="90px"
         right="20px"
       >
         Add expense
