@@ -22,7 +22,7 @@ import {
 } from '@chakra-ui/react';
 import { CiCamera } from 'react-icons/ci';
 
-import { useProfileStore } from '../../hooks';
+import { useProfileStore } from '../../store';
 import { useRef } from 'react';
 import { formatPrice } from '../../utils';
 import { useNavigate } from 'react-router-dom';

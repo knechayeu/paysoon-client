@@ -19,19 +19,56 @@ import {
   Input,
   Icon,
 } from '@chakra-ui/react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Layout } from '../components';
-import { ArrowBackIcon, CloseIcon } from '@chakra-ui/icons';
+import { AddIcon, ArrowBackIcon, CloseIcon } from '@chakra-ui/icons';
+import { useScroll } from '../hooks';
+import { ERouter } from '../enums';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { BACKEND_URL } from '../constants';
 
 const Room = () => {
   const { isOpen, onToggle } = useDisclosure();
+  const { showIcon } = useScroll();
+  let params = useParams();
   const navigate = useNavigate();
   const location = useLocation()?.search;
-  const name = new URLSearchParams(location).get('name');
+
+  const [currentRoom, setCurrentRoom] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (params.id) {
+      const getCurrentRoom = async () => {
+        try {
+          const room = await axios(`${BACKEND_URL.GetRoom}/${params.id}`);
+          console.log(room, 1919);
+
+          setCurrentRoom(room.data);
+          setIsLoading(false);
+
+          return room;
+        } catch (e: any) {
+          if (e?.status === 307) {
+            navigate(-1);
+          }
+        }
+      };
+
+      getCurrentRoom();
+    }
+  }, [params.id]);
 
   return (
-    <Layout>
-      <Icon mb={4} onClick={() => navigate(-1)} as={ArrowBackIcon} w={7} h={7} />
+    <Layout isLoading={isLoading}>
+      <Icon
+        mb={4}
+        onClick={() => navigate(-1)}
+        as={ArrowBackIcon}
+        w={7}
+        h={7}
+      />
       <Flex alignItems="flex-start" flexDirection="column" gap={4}>
         <Flex alignItems="center" gap={4}>
           <Image
@@ -40,14 +77,14 @@ const Room = () => {
             fallbackSrc="https://via.placeholder.com/75"
           />
           <Box>
-            <Heading size="lg">{name}</Heading>
+            <Heading size="lg">{currentRoom?.title}</Heading>
 
-            <Text fontSize="sm">Должники</Text>
+            <Text fontSize="sm">Описание</Text>
           </Box>
         </Flex>
         <Tabs w="100%" isFitted size="md" colorScheme="teal" variant="enclosed">
           <TabList>
-            <Tab>Settle up</Tab>
+            <Tab>История</Tab>
             <Tab>Two</Tab>
           </TabList>
           <TabPanels>
@@ -126,13 +163,13 @@ const Room = () => {
       </Slide>
 
       <Button
-        onClick={onToggle}
+        onClick={() => navigate(ERouter.CreateTransaction)}
         colorScheme="teal"
         position="fixed"
         bottom="90px"
         right="20px"
       >
-        Add expense
+        {showIcon ? <Icon as={AddIcon} /> : 'Внести оплату'}
       </Button>
     </Layout>
   );

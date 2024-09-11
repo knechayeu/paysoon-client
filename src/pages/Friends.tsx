@@ -9,7 +9,8 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { Layout } from '../components';
-import { useProfileStore, useScroll, useTelegram } from '../hooks';
+import { useScroll, useTelegram } from '../hooks';
+import { useProfileStore } from '../store';
 import { AddIcon } from '@chakra-ui/icons';
 
 const Friends = () => {

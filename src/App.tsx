@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { useColorMode } from '@chakra-ui/react';
-import { useProfileStore, useTelegram } from './hooks';
+import { useTelegram } from './hooks';
+import { useProfileStore } from './store';
 import { router } from './config';
 
 const App = () => {

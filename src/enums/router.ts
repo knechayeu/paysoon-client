@@ -4,4 +4,5 @@ export enum ERouter {
   Profile = '/profile',
   CreateRoom = '/create-room',
   Room = '/room',
+  CreateTransaction = '/create-transaction',
 };

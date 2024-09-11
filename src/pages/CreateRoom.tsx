@@ -1,6 +1,5 @@
-import React from 'react';
+import { useRef, useState } from 'react';
 import { Layout } from '../components';
-import { useTelegram } from '../hooks';
 import {
   AbsoluteCenter,
   Box,
@@ -11,48 +10,113 @@ import {
   FormLabel,
   Heading,
   Input,
-  InputGroup,
-  InputRightElement,
+  Image,
 } from '@chakra-ui/react';
+import { BACKEND_URL } from '../constants';
+import { axiosInstance } from '../services';
+import { postAxios } from '../services/axios';
 
 const CreateRoom = () => {
-  const [show, setShow] = React.useState(false);
-  const { user } = useTelegram();
+  const [formValues, setFormValues] = useState({
+    photoUrl: '',
+    title: '',
+    description: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleClick = () => setShow(!show);
+  const fileUploadRef: any = useRef();
+
+  const uploadImageDisplay = () => {
+    const uploadedFile = fileUploadRef.current.files[0];
+    const cachedURL = URL.createObjectURL(uploadedFile);
+
+    setFormValues({
+      ...formValues,
+      photoUrl: cachedURL,
+    });
+  };
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    if (formValues?.title?.length) {
+      const room = await postAxios(BACKEND_URL.CreateRoom, formValues);
+      console.log(room, 198189)
+      // try {
+
+      //   con
+      //   const room = await axiosInstance.post(
+      //     BACKEND_URL.CreateRoom,
+      //     formValues
+      //   );
+      //   console.log(formValues, room, 19);
+      // } catch (e) {
+      //   setIsSubmitting(false);
+      // }
+    }
+    setIsSubmitting(false);
+  };
+
+  const handleInputChange = (event: any) => {
+    setFormValues({
+      ...formValues,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   return (
     <Layout>
       <Box position="relative" mb={10}>
         <Divider />
-        <AbsoluteCenter px="0" bg="black">
-          <Heading size="md">Create new room</Heading>
+        <AbsoluteCenter px="2" bg="black">
+          <Heading size="sm">Создать комнату</Heading>
         </AbsoluteCenter>
       </Box>
 
       <Flex flexDirection="column" gap={4} mb={4}>
-        <FormControl isRequired>
-          <FormLabel>Room name</FormLabel>
-          <Input placeholder="Room name" />
+        <Image
+          width="75px"
+          margin="0 auto"
+          borderRadius="10"
+          src="gibbresh.png"
+          fallbackSrc={
+            formValues.photoUrl?.length
+              ? formValues?.photoUrl
+              : 'https://via.placeholder.com/75'
+          }
+          cursor="pointer"
+          onClick={() => fileUploadRef.current.click()}
+        />
+        <input
+          type="file"
+          id="file"
+          onChange={uploadImageDisplay}
+          ref={fileUploadRef}
+          hidden
+        />
+
+        <FormControl isRequired isInvalid={!formValues.title?.length}>
+          <FormLabel>Название</FormLabel>
+          <Input
+            name="title"
+            placeholder="Название"
+            value={formValues.title}
+            onChange={handleInputChange}
+          />
         </FormControl>
 
-        <FormControl isRequired>
-          <FormLabel>Password</FormLabel>
-          <InputGroup size="md">
-            <Input
-              pr="4.5rem"
-              type={show ? 'text' : 'password'}
-              placeholder="Enter password"
-            />
-            <InputRightElement width="4.5rem">
-              <Button h="1.75rem" size="sm" onClick={handleClick}>
-                {show ? 'Hide' : 'Show'}
-              </Button>
-            </InputRightElement>
-          </InputGroup>
+        <FormControl>
+          <FormLabel>Описание</FormLabel>
+          <Input
+            name="description"
+            placeholder="Описание"
+            value={formValues.description}
+            onChange={handleInputChange}
+          />
         </FormControl>
 
-        <Button>Submit</Button>
+        <Button mt={4} onClick={handleSubmit} isLoading={isSubmitting}>
+          Создать
+        </Button>
       </Flex>
     </Layout>
   );
