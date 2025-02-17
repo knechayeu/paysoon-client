@@ -9,9 +9,9 @@ export const Layout = ({ children, isLoading = false }: any) => {
         height="calc(100vh - 90px)"
         overflowY="scroll"
         boxSizing="border-box"
-        boxShadow="0 -10px 40px -5px teal"
+        // boxShadow="0 -10px 40px -5px teal"
         className="layout"
-        borderTop="2px solid teal"
+        // borderTop="2px solid teal"
         p="36px 20px"
         mt={10}
         borderTopLeftRadius={35}

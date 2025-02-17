@@ -32,29 +32,12 @@ const Rooms = () => {
   const [listRooms, setListRooms] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // useEffect(() => {
-  //   if (id) {
-  //     console.log(id, 11);
-  //     const getUser = async () => {
-  //       const userData = await axios.post(`http://localhost:3001/create-user`, {
-  //         ...user,
-  //       });
-
-  //       return userData;
-  //     };
-
-  //     getUser();
-  //   }
-  // }, [id]);
-
   useEffect(() => {
     if (user) {
       const getUser = async () => {
         const userData = await axios.post(`http://localhost:3001/create-user`, {
           ...user,
         });
-
-        console.log(userData, 19191);
 
         if (userData.data?.id) {
           sessionStorage.setItem('id', userData.data.id);
@@ -69,13 +52,16 @@ const Rooms = () => {
 
   useEffect(() => {
     const getAllRooms = async () => {
-      const rooms = await axios(`http://localhost:3001/rooms`);
-      console.log(rooms.data, 1919);
+      try {
+        const rooms = await axios(`http://localhost:3001/rooms`);
 
-      setListRooms(rooms.data);
+        setListRooms(rooms.data);
 
-      setIsLoading(false);
-      return rooms;
+        setIsLoading(false);
+        return rooms;
+      } catch (e) {
+        setIsLoading(false);
+      }
     };
 
     getAllRooms();
@@ -88,7 +74,7 @@ const Rooms = () => {
           spacing={2}
           templateColumns="repeat(auto-fill, minmax(1fr, 1fr))"
           {...(!listRooms?.length && { height: '100%' })}
-          // height="100%"
+        // height="100%"
         >
           {listRooms?.length ? (
             listRooms.map((room, index) => (
@@ -134,7 +120,7 @@ const Rooms = () => {
             ))
           ) : (
             <Stack height="100%" justifyContent="center" alignItems="center">
-              <Flex>Комнат нет</Flex>
+              <Flex>Комнат нет1112245678911</Flex>
             </Stack>
           )}
         </SimpleGrid>
