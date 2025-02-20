@@ -1,123 +1,134 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
+import { useForm } from 'react-hook-form';
 import { Layout } from '../components';
 import {
-  AbsoluteCenter,
   Box,
   Button,
-  Divider,
   Flex,
   FormControl,
   FormLabel,
   Heading,
   Input,
-  Image,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 import { BACKEND_URL } from '../constants';
-import { axiosInstance } from '../services';
 import { postAxios } from '../services/axios';
 
-const CreateRoom = () => {
-  const [formValues, setFormValues] = useState({
-    photoUrl: '',
-    title: '',
-    description: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+interface FormValues {
+  photoUrl: string;
+  title: string;
+  description: string;
+}
 
-  const fileUploadRef: any = useRef();
+const CreateRoom = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+  } = useForm<FormValues>({
+    defaultValues: {
+      photoUrl: '',
+      title: '',
+      description: '',
+    }
+  });
+
+  const fileUploadRef = useRef<HTMLInputElement>(null);
 
   const uploadImageDisplay = () => {
-    const uploadedFile = fileUploadRef.current.files[0];
+    const uploadedFile = fileUploadRef.current?.files?.[0];
+    if (!uploadedFile) return;
+    
     const cachedURL = URL.createObjectURL(uploadedFile);
-
-    setFormValues({
-      ...formValues,
-      photoUrl: cachedURL,
-    });
+    setValue('photoUrl', cachedURL);
   };
 
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-    if (formValues?.title?.length) {
-      const room = await postAxios(BACKEND_URL.CreateRoom, formValues);
-      console.log(room, 198189)
-      // try {
-
-      //   con
-      //   const room = await axiosInstance.post(
-      //     BACKEND_URL.CreateRoom,
-      //     formValues
-      //   );
-      //   console.log(formValues, room, 19);
-      // } catch (e) {
-      //   setIsSubmitting(false);
-      // }
+  const onSubmit = async (data: FormValues) => {
+    try {
+      await postAxios(BACKEND_URL.CreateRoom, data);
+      // Handle successful room creation (e.g., redirect)
+    } catch (e) {
+      // Можно использовать setError из useForm для отображения ошибки
+      console.error('Произошла ошибка при создании комнаты');
     }
-    setIsSubmitting(false);
-  };
-
-  const handleInputChange = (event: any) => {
-    setFormValues({
-      ...formValues,
-      [event.target.name]: event.target.value,
-    });
   };
 
   return (
     <Layout>
-      <Box position="relative" mb={10}>
-        <Divider />
-        <AbsoluteCenter px="2" bg="black">
-          <Heading size="sm">Создать комнату</Heading>
-        </AbsoluteCenter>
+      <Box flex="1">
+        <Box position="relative" mb={10}>
+          <Heading textAlign="center" size="lg">Создать комнату</Heading>
+        </Box>
+
+        <Flex
+          as="form"
+          onSubmit={handleSubmit(onSubmit)}
+          direction="column"
+          gap={6}
+          // p={8}
+          borderRadius="xl"
+          boxShadow="lg"
+        >
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileUploadRef}
+            onChange={uploadImageDisplay}
+            hidden
+          />
+
+          <FormControl isInvalid={!!errors.title}>
+            <FormLabel fontSize="lg">Название</FormLabel>
+            <Input
+              {...register('title', { 
+                required: 'Пожалуйста, введите название комнаты' 
+              })}
+              placeholder="Введите название комнаты"
+              size="lg"
+              borderRadius="md"
+              _focus={{
+                borderColor: "blue.400",
+                boxShadow: "0 0 0 1px blue.400"
+              }}
+            />
+            <FormErrorMessage>
+              {errors.title?.message}
+            </FormErrorMessage>
+          </FormControl>
+
+          <FormControl>
+            <FormLabel fontSize="lg">Описание</FormLabel>
+            <Input
+              {...register('description')}
+              placeholder="Добавьте описание комнаты"
+              size="lg"
+              borderRadius="md"
+              _focus={{
+                borderColor: "blue.400",
+                boxShadow: "0 0 0 1px blue.400"
+              }}
+            />
+          </FormControl>
+
+          <Button
+            mt={6}
+            type="submit"
+            isLoading={isSubmitting}
+            colorScheme="blue"
+            size="lg"
+            width="100%"
+            borderRadius="md"
+            _hover={{
+              transform: "translateY(-2px)",
+              boxShadow: "lg"
+            }}
+            transition="all 0.2s"
+          >
+            Создать комнату
+          </Button>
+        </Flex>
       </Box>
-
-      <Flex flexDirection="column" gap={4} mb={4}>
-        <Image
-          width="75px"
-          margin="0 auto"
-          borderRadius="10"
-          src="gibbresh.png"
-          fallbackSrc={
-            formValues.photoUrl?.length
-              ? formValues?.photoUrl
-              : 'https://via.placeholder.com/75'
-          }
-          cursor="pointer"
-          onClick={() => fileUploadRef.current.click()}
-        />
-        <input
-          type="file"
-          id="file"
-          onChange={uploadImageDisplay}
-          ref={fileUploadRef}
-          hidden
-        />
-
-        <FormControl isRequired isInvalid={!formValues.title?.length}>
-          <FormLabel>Название</FormLabel>
-          <Input
-            name="title"
-            placeholder="Название"
-            value={formValues.title}
-            onChange={handleInputChange}
-          />
-        </FormControl>
-
-        <FormControl>
-          <FormLabel>Описание</FormLabel>
-          <Input
-            name="description"
-            placeholder="Описание"
-            value={formValues.description}
-            onChange={handleInputChange}
-          />
-        </FormControl>
-
-        <Button mt={4} onClick={handleSubmit} isLoading={isSubmitting}>
-          Создать
-        </Button>
-      </Flex>
     </Layout>
   );
 };

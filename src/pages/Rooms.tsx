@@ -1,10 +1,6 @@
 import {
   Box,
   Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
   Image,
   Flex,
   Heading,
@@ -18,9 +14,17 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Layout } from '../components';
 import { ERouter } from '../enums';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useScroll, useTelegram } from '../hooks';
 import { AddIcon } from '@chakra-ui/icons';
+import RoomPreview from '../sections/rooms/room-preview';
+import { createUser, getAllRooms } from '../services/api';
+
+interface Room {
+  id: number;
+  title: string;
+  description?: string;
+  room_url?: string;
+}
 
 const Rooms = () => {
   const navigate = useNavigate();
@@ -29,98 +33,61 @@ const Rooms = () => {
   const location = useLocation()?.search;
   const id = new URLSearchParams(location).get('tgWebAppStartParam');
 
-  const [listRooms, setListRooms] = useState([]);
+  const [rooms, setRooms] = useState<Room[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
-      const getUser = async () => {
-        const userData = await axios.post(`http://localhost:3001/create-user`, {
-          ...user,
-        });
-
-        if (userData.data?.id) {
-          sessionStorage.setItem('id', userData.data.id);
+      createUser(user).then((userData) => {
+        if (userData?.id) {
+          sessionStorage.setItem('id', userData.id);
         }
-
-        return userData;
-      };
-
-      getUser();
+      });
     }
   }, [user]);
 
   useEffect(() => {
-    const getAllRooms = async () => {
+    const fetchRooms = async () => {
       try {
-        const rooms = await axios(`http://localhost:3001/rooms`);
-
-        setListRooms(rooms.data);
-
-        setIsLoading(false);
-        return rooms;
-      } catch (e) {
+        const roomsData = await getAllRooms();
+        setRooms(roomsData);
+      } catch (error) {
+        console.error('Failed to fetch rooms:', error);
+      } finally {
         setIsLoading(false);
       }
     };
 
-    getAllRooms();
+    fetchRooms();
   }, []);
+
+  const handleViewDetails = (roomId: any) => {
+    navigate(`/room/${roomId}`);
+
+    console.log(`View details for room ${roomId}`);
+  };
 
   return (
     <Layout isLoading={isLoading}>
-      <Flex gap={2} flexDirection="column" height="100%">
+      <Flex flex="1" gap={4} alignItems="flex-start">
         <SimpleGrid
           spacing={2}
-          templateColumns="repeat(auto-fill, minmax(1fr, 1fr))"
-          {...(!listRooms?.length && { height: '100%' })}
-        // height="100%"
+          templateColumns="repeat(2, 1fr)"
+          gap={4}
+          w="100%"
         >
-          {listRooms?.length ? (
-            listRooms.map((room, index) => (
-              <Box
-                key={index}
-                display="flex"
-                flexDirection="row"
-                borderRadius="10px"
-                padding={2}
-                boxShadow="0px 2px 2px 0px teal"
-                // overflow="hidden"
-                // variant="outline"
-                gap={4}
-                onClick={() =>
-                  navigate({
-                    pathname: `${ERouter.Room}/${room.id}`,
-                  })
-                }
-              >
-                <Image
-                  // width="75px"
-                  // margin="0 auto"
-                  objectFit="cover"
-                  maxW={{ base: '75px', sm: '200px' }}
-                  borderRadius="10"
-                  src="gibbresh.png"
-                  fallbackSrc={
-                    room?.room_url?.length
-                      ? room.room_url
-                      : 'https://via.placeholder.com/75'
-                  }
-                  cursor="pointer"
-                />
-                <Stack>
-                  <Heading size="sm">{room?.title}</Heading>
-                  {room?.description?.length && (
-                    <Text p={0} fontSize="xs">
-                      {room.description}
-                    </Text>
-                  )}
-                </Stack>
-              </Box>
+          {rooms.length ? (
+            rooms.map((room) => (
+              <RoomPreview
+                key={room.id}
+                title={room.title}
+                description={room.description || ''}
+                onViewDetails={() => handleViewDetails(room.id)}
+              />
             ))
           ) : (
             <Stack height="100%" justifyContent="center" alignItems="center">
-              <Flex>Комнат нет1112245678911</Flex>
+              <Flex>Нет доступных комнат</Flex>
             </Stack>
           )}
         </SimpleGrid>

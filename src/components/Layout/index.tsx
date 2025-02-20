@@ -1,37 +1,37 @@
-import { Box, Container, Spinner } from '@chakra-ui/react';
+import { Box, ChakraProvider, Flex, Spinner } from '@chakra-ui/react';
 import { Footer } from '../Footer/Footer';
+import { ReactNode } from 'react';
 
-export const Layout = ({ children, isLoading = false }: any) => {
+interface LayoutProps {
+  children: ReactNode;
+  isLoading?: boolean;
+}
+
+export const Layout = ({ children, isLoading = false }: LayoutProps) => {
   return (
-    <>
-      <Container
-        position="relative"
-        height="calc(100vh - 90px)"
-        overflowY="scroll"
-        boxSizing="border-box"
-        // boxShadow="0 -10px 40px -5px teal"
-        className="layout"
-        // borderTop="2px solid teal"
-        p="36px 20px"
-        mt={10}
-        borderTopLeftRadius={35}
-        borderTopRightRadius={35}
-      >
-        {isLoading ? (
-          <Box
-            height="100%"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Spinner size="xl" color="teal" />
-          </Box>
-        ) : (
-          children
-        )}
-      </Container>
+    <ChakraProvider>
+      <Flex direction="column" height="calc(100vh - 71px)">
+        <Box as="header" color="white" py={4} px={8}>
+          Header
+        </Box>
 
-      <Footer />
-    </>
+        <Box display="flex" flex="1" py={4} px={8}>
+          {isLoading ? (
+            <Box
+              display="flex"
+              flex="1"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Spinner size="xl" color="teal" />
+            </Box>
+          ) : (
+            children
+          )}
+        </Box>
+
+        <Footer />
+      </Flex>
+    </ChakraProvider>
   );
 };

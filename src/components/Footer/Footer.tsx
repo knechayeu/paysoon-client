@@ -49,6 +49,7 @@ export const Footer = () => {
       p={3}
       pl={4}
       pr={4}
+      as="footer"
       bg="gray.900"
       borderTop="1px solid teal"
       rounded="xl"
@@ -113,8 +114,7 @@ export const Footer = () => {
             </Flex>
           </Stack>
         </GridItem>
-        {/* <GridItem w="100%" h="10" bg="blue.500" /> */}
-        <GridItem
+        {/* <GridItem
           display="flex"
           alignItems="center"
           justifyContent="center"
@@ -134,7 +134,7 @@ export const Footer = () => {
             size="lg"
             icon={<AddIcon />}
           />
-        </GridItem>
+        </GridItem> */}
         <GridItem colStart={5} colEnd={7} w="100%">
           <Stack
             flexDirection="row"
