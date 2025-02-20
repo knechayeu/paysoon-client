@@ -1,10 +1,9 @@
 import axios from 'axios';
-
-const API_BASE_URL = process.env.BACKEND_HOST;
+import { BACKEND_URL } from '../constants';
 
 export const createUser = async (userData: any) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/create-user`, userData);
+    const response = await axios.post(BACKEND_URL.CreateUser, userData);
     return response.data;
   } catch (error) {
     console.error('Failed to create user:', error);
@@ -13,6 +12,6 @@ export const createUser = async (userData: any) => {
 };
 
 export const getAllRooms = async () => {
-  const response = await axios.get(`${API_BASE_URL}/rooms`);
+  const response = await axios.get(BACKEND_URL.GetAllRooms);
   return response.data;
 }; 
