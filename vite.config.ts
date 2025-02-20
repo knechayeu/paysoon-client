@@ -8,19 +8,17 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   console.log(mode, 11)
 
-  const server = mode === 'development' ? {
-    server: {
-      port: 5173,
-      host: "0.0.0.0",
-      hmr: {
-        host: 'localhost',
-        port: 5174,
-      },
-      https: {
-        key: fs.readFileSync('./.cert/localhost-key.pem'),
-        cert: fs.readFileSync('./.cert/localhost.pem'),
-      },
+  const serverConfig = mode === 'development' ? {
+    port: 5173,
+    host: "0.0.0.0",
+    hmr: {
+      host: 'localhost',
+      port: 5174,
     },
+    https: mode === 'development' && fs.existsSync('./.cert/localhost-key.pem') ? {
+      key: fs.readFileSync('./.cert/localhost-key.pem'),
+      cert: fs.readFileSync('./.cert/localhost.pem'),
+    } : undefined,
   } : {}
 
   return {
@@ -28,12 +26,10 @@ export default defineConfig(({ mode }) => {
     define: {
       ...Object.keys(env).reduce((prev, key) => {
         const sanitizedKey = key.replace(/[^a-zA-Z0-9_]/g, "_");
-
         prev[`process.env.${sanitizedKey}`] = JSON.stringify(env[key]);
-
         return prev;
       }, {}),
     },
-    ...server,
+    server: serverConfig,
   }
 })
