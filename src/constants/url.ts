@@ -1,4 +1,4 @@
-const BACKEND_HOST: string = process.env.BACKEND_HOST || '';
+const BACKEND_HOST: string = process.env.RAILWAY_PUBLIC_DOMAIN || '';
 
 export const BACKEND_URL = {
     GetRoom: `${BACKEND_HOST}/room`,
