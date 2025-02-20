@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.RAILWAY_PUBLIC_DOMAIN;
+const API_BASE_URL = process.env.BACKEND_HOST;
 
 export const createUser = async (userData: any) => {
   try {
