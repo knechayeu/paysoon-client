@@ -4,10 +4,6 @@ import {
   InputGroup,
   InputLeftAddon,
   Button,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   useDisclosure,
   Box,
   IconButton,
@@ -16,18 +12,18 @@ import {
   List,
   Heading,
   Text,
-  Checkbox,
-  AbsoluteCenter,
-  Divider,
   Flex,
   Avatar,
   AvatarBadge,
   Select,
+  Image,
 } from '@chakra-ui/react';
 import { Layout } from '../components';
-import { CheckIcon, ChevronDownIcon, CloseIcon } from '@chakra-ui/icons';
+import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
 import { useTelegram } from '../hooks/useTelegram';
+import axios from 'axios';
+import { BACKEND_URL } from '../constants';
 
 const CreateTransaction = () => {
   const { tg } = useTelegram();
@@ -36,6 +32,8 @@ const CreateTransaction = () => {
   const [transactionType, setTransactionType] = useState('equal');
   const { isOpen, onToggle } = useDisclosure();
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [imageResponse, setImageResponse] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSelectRoom = (roomId: number) => {
     setSelectedRoom({
@@ -83,6 +81,8 @@ const CreateTransaction = () => {
             const reader = new FileReader();
             reader.onload = (e) => {
               setUploadedImage(e.target?.result as string);
+
+              console.log(e.target?.result)
             };
             reader.readAsDataURL(file);
           }
@@ -93,8 +93,26 @@ const CreateTransaction = () => {
     });
   };
 
+  const handleSendImage = async () => {
+    if (uploadedImage) {
+      setIsLoading(true);
+      try {
+        const response = await axios.post(BACKEND_URL.UploadImage, {
+          base64Image: uploadedImage
+        });
+        
+        setImageResponse(response.data);
+        tg.sendData(JSON.stringify(response.data));
+      } catch (error) {
+        console.error('Ошибка при загрузке изображения:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
   return (
-    <Layout>
+    <Layout isLoading={isLoading}>
       <Stack spacing={4}>
         {/* <Stack spacing={4} flexDirection="row" overflowY="auto">
           {Array.from({ length: 50 }, (_, i) => (
@@ -133,7 +151,26 @@ const CreateTransaction = () => {
           <option value="shuffle">Выборочно</option>
         </Select>
 
-        {uploadedImage}
+        <Button 
+          onClick={handleSendImage} 
+          isLoading={isLoading}
+          loadingText="Загрузка..."
+        >
+          Отправить фото
+        </Button>
+
+        {uploadedImage && <Image src={uploadedImage} w="100%" h="250px" />}
+
+        {imageResponse?.length && imageResponse.map((item: any) => (
+          <Flex key={item.name} justify="space-between">
+            <Text fontSize="sm" color="gray.500">
+              {item.name}
+            </Text>
+            <Text fontSize="sm" color="gray.500">
+              {item.price} BYN
+            </Text>
+          </Flex>
+        ))}
 
         <Stack direction="row" spacing={4} justify="center">
           <Button
@@ -191,7 +228,7 @@ const CreateTransaction = () => {
           ))}
       </Stack>
 
-      <Flex
+      {/* <Flex
         padding="20px"
         position="fixed"
         bottom="70px"
@@ -209,7 +246,7 @@ const CreateTransaction = () => {
         </Text>
 
         <Button colorScheme="teal">Добавить</Button>
-      </Flex>
+      </Flex> */}
 
       <Slide direction="bottom" in={isOpen} style={{ zIndex: 10 }}>
         <Box p="20px" mt="4" bg="black" height="calc(100vh - 70px)">

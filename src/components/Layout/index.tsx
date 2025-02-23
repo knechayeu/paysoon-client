@@ -9,7 +9,7 @@ interface LayoutProps {
 
 export const Layout = ({ children, isLoading = false }: LayoutProps) => {
   return (
-    <Flex direction="column" height="calc(100vh - 71px)">
+    <Flex direction="column" height="calc(100vh - 71px)" overflowY="auto">
       {/* <Box as="header" color="white" py={4} px={8}>
         Header
       </Box> */}
