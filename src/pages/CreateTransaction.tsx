@@ -27,12 +27,15 @@ import {
 import { Layout } from '../components';
 import { CheckIcon, ChevronDownIcon, CloseIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
+import { useTelegram } from '../hooks/useTelegram';
 
 const CreateTransaction = () => {
+  const { tg } = useTelegram();
   const [selectedRoom, setSelectedRoom] = useState<any>(null);
   const [selectedUsers, setSelectedUsers] = useState<any>([]);
   const [transactionType, setTransactionType] = useState('equal');
   const { isOpen, onToggle } = useDisclosure();
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 
   const handleSelectRoom = (roomId: number) => {
     setSelectedRoom({
@@ -56,6 +59,38 @@ const CreateTransaction = () => {
 
   const handleSelectType = (e: any) => {
     setTransactionType(e.target.value);
+  };
+
+  const handleImageUpload = () => {
+    tg.MainButton.text = "Выбрать фото";
+    tg.MainButton.show();
+    tg.MainButton.onClick(() => {
+      tg.showPopup({
+        title: 'Загрузка фото',
+        message: 'Выберите фото из галереи',
+        buttons: [{
+          type: 'default',
+          text: 'Выбрать'
+        }]
+      }, () => {
+        // Используем нативный метод для выбора файла
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = (e: any) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              setUploadedImage(e.target?.result as string);
+            };
+            reader.readAsDataURL(file);
+          }
+        };
+        input.click();
+        tg.MainButton.hide();
+      });
+    });
   };
 
   return (
@@ -97,6 +132,25 @@ const CreateTransaction = () => {
           <option value="equal">Поровну</option>
           <option value="shuffle">Выборочно</option>
         </Select>
+
+        {uploadedImage}
+
+        <Stack direction="row" spacing={4} justify="center">
+          <Button
+            leftIcon={<i className="fas fa-camera" />}
+            onClick={() => window.Telegram.WebApp.showScanQrPopup({
+              text: "Отсканируйте QR-код чека"
+            })}
+          >
+            Сканировать QR
+          </Button>
+          <Button
+            leftIcon={<i className="fas fa-image" />}
+            onClick={handleImageUpload}
+          >
+            Загрузить фото
+          </Button>
+        </Stack>
 
         {transactionType === 'shuffle' && (
           <Stack spacing={4} flexDirection="row" overflowY="auto">
@@ -149,10 +203,10 @@ const CreateTransaction = () => {
         alignItems="center"
       >
         <Text fontSize="xs">
-            Сумма будет распределена 
-            {transactionType === 'equal' && ' поровну со всеми'}
-            {transactionType === 'shuffle' && ` c ${selectedUsers?.length} участником(ами)`}
-            </Text>
+          Сумма будет распределена
+          {transactionType === 'equal' && ' поровну со всеми'}
+          {transactionType === 'shuffle' && ` c ${selectedUsers?.length} участником(ами)`}
+        </Text>
 
         <Button colorScheme="teal">Добавить</Button>
       </Flex>
