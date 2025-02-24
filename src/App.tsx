@@ -10,7 +10,7 @@ const App = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const userProfileStore = useProfileStore((state: any) => state);
 
-  console.log(user, 111)
+  console.log(user, 1112)
 
   useEffect(() => {
     if (colorMode === 'light') {
