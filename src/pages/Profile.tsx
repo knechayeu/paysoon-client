@@ -2,7 +2,7 @@ import { Layout, UserProfile } from '../components';
 
 const Profile = () => {
   return (
-    <Layout>
+    <Layout title="Профиль">
       <UserProfile />
     </Layout>
   );

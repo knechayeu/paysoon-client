@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { Rooms, NewRoom, Profile, Room, Friends, CreateTransaction } from '../pages';
 import { ERouter } from '../enums';
 
@@ -26,5 +26,9 @@ export const router = createBrowserRouter([
   {
     path: ERouter.CreateTransaction,
     element: <CreateTransaction />,
+  },
+  {
+    path: '*',
+    element: <Navigate to={ERouter.Rooms} />,
   },
 ]);

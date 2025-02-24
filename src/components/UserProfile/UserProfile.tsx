@@ -33,7 +33,7 @@ export const UserProfile = () => {
   const fileUploadRef: any = useRef();
   const userProfile = useProfileStore((state: any) => state);
 
-  const fullName = `${userProfile.user?.last_name} ${userProfile.user?.first_name}`;
+  const fullName = `${userProfile.user?.first_name} ${userProfile.user?.last_name}`;
 
   const uploadImageDisplay = () => {
     const uploadedFile = fileUploadRef.current.files[0];
@@ -44,7 +44,7 @@ export const UserProfile = () => {
     userProfile.updateUser({ ...userProfile.user, avatarUrl: cachedURL });
   };
   return (
-    <Stack flexDirection="column" gap={10}>
+    <Stack gap={10}>
       <Flex
         flexDirection="column"
         alignItems="center"
@@ -77,7 +77,7 @@ export const UserProfile = () => {
         </Flex>
       </Flex>
 
-      <Flex flexDirection="column" gap={8}>
+      {/* <Flex flexDirection="column" gap={8}>
         <Box position="relative">
           <Divider />
           <AbsoluteCenter px="4" bg="black">
@@ -143,7 +143,7 @@ export const UserProfile = () => {
             </TabPanel>
           </TabPanels>
         </Tabs>
-      </Flex>
+      </Flex> */}
     </Stack>
   );
 };

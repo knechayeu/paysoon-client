@@ -33,7 +33,6 @@ const Room = () => {
   const { showIcon } = useScroll();
   let params = useParams();
   const navigate = useNavigate();
-  const location = useLocation()?.search;
 
   const [currentRoom, setCurrentRoom] = useState();
   const [isLoading, setIsLoading] = useState(true);

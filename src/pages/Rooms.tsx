@@ -72,7 +72,7 @@ const Rooms = () => {
       <Flex flex="1" gap={4} alignItems="flex-start">
         <SimpleGrid
           spacing={2}
-          templateColumns="repeat(2, 1fr)"
+          templateColumns="repeat(1, 1fr)"
           gap={4}
           w="100%"
         >

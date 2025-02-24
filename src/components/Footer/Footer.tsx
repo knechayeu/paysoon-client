@@ -1,24 +1,20 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { FaUserGroup, FaUser } from 'react-icons/fa6';
-import { MdManageAccounts } from 'react-icons/md';
+import { HiOutlineUser } from "react-icons/hi";
+import { RiListSettingsFill } from "react-icons/ri";
+import { IoAddCircleSharp } from "react-icons/io5";
+import { IoIosStats } from "react-icons/io";
+
+
+
+import { RiHomeLine } from "react-icons/ri";
 import {
   Flex,
   Icon,
   Text,
-  Box,
-  Avatar,
-  GridItem,
-  Grid,
   Stack,
-  Button,
-  IconButton,
 } from '@chakra-ui/react';
 import { useTelegram } from '../../hooks';
-import { useProfileStore } from '../../store';
-
-import styles from './footer.module.scss';
-import { ERouter } from '../../enums';
-import { AddIcon } from '@chakra-ui/icons';
+import { useProfileStore } from '../../store'
 
 export const Footer = () => {
   let navigate = useNavigate();
@@ -28,202 +24,60 @@ export const Footer = () => {
 
   const listLinks = [
     {
-      title: 'Rooms',
+      title: 'Home',
       navigate: '/',
-      icon: FaUserGroup,
+      icon: RiHomeLine,
     },
     {
       title: 'Friends',
       navigate: '/friends',
-      icon: FaUser,
+      icon: HiOutlineUser,
     },
     {
-      title: user?.username || 'Profile',
+      title: 'Add',
+      navigate: '/create-transaction',
+      icon: IoAddCircleSharp,
+    },
+    {
+      title: 'Statistics',
+      navigate: '/statistics',
+      icon: IoIosStats,
+    },
+    {
+      title: 'Settings',
       navigate: '/profile',
-      icon: MdManageAccounts,
+      icon: RiListSettingsFill,
     },
   ];
 
   return (
-    <Box
+    <Stack
+      position="fixed"
+      bottom={0}
+      left={0}
+      right={0}
+      zIndex={1000}
       p={3}
       pl={4}
       pr={4}
       as="footer"
-      bg="gray.900"
-      borderTop="1px solid teal"
-      rounded="xl"
+      boxSizing="border-box"
       boxShadow="0 0px 10px -0px teal"
-      className={styles.footer}
     >
-      <Grid w="100%" templateColumns="repeat(6, 1fr)" gap={6}>
-        <GridItem colStart={1} colEnd={3} w="100%">
-          <Stack
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between"
-            gap={6}
-            height="100%"
-          >
-            <Flex
-              color={
-                location.pathname === listLinks[0].navigate ? 'teal' : 'initial'
-              }
-              alignItems="center"
-              flexDirection="column"
-              justifyContent="flex-end"
-              gap={1}
-              onClick={() => navigate(listLinks[0].navigate)}
-              cursor="pointer"
-            >
-              {listLinks[0].navigate === ERouter.Profile ? (
-                <Avatar
-                  src={userProfile.user?.avatarUrl}
-                  w={6}
-                  h={6}
-                  cursor="pointer"
-                />
-              ) : (
-                <Icon as={listLinks[0].icon} w={6} h={6} />
-              )}
-              <Text fontSize="xs">{listLinks[0].title}</Text>
-            </Flex>
-
-            <Flex
-              color={
-                location.pathname === listLinks[1].navigate ? 'teal' : 'initial'
-              }
-              alignItems="center"
-              flexDirection="column"
-              justifyContent="flex-end"
-              gap={1}
-              onClick={() => navigate(listLinks[1].navigate)}
-              cursor="pointer"
-            >
-              {listLinks[1].navigate === ERouter.Profile ? (
-                <Avatar
-                  src={userProfile.user?.avatarUrl}
-                  w={6}
-                  h={6}
-                  cursor="pointer"
-                />
-              ) : (
-                <Icon as={listLinks[1].icon} w={6} h={6} />
-              )}
-              <Text fontSize="xs">{listLinks[1].title}</Text>
-            </Flex>
-          </Stack>
-        </GridItem>
-        {/* <GridItem
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          colStart={3}
-          colEnd={5}
-          w="100%"
-        >
-          <IconButton
-            position="absolute"
-            top="-25px"
-            // boxShadow="0 0px 10px -0px teal"
-            aria-label="Search database"
-            // colorScheme="teal"
-            variant="solid"
-            borderRadius="50%"
-            bg="black"
-            size="lg"
-            icon={<AddIcon />}
-          />
-        </GridItem> */}
-        <GridItem colStart={5} colEnd={7} w="100%">
-          <Stack
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between"
-            gap={6}
-          >
-            <Flex
-              color={
-                location.pathname === listLinks[2].navigate ? 'teal' : 'initial'
-              }
-              alignItems="center"
-              flexDirection="column"
-              justifyContent="flex-end"
-              gap={1}
-              onClick={() => navigate(listLinks[2].navigate)}
-              cursor="pointer"
-            >
-              {listLinks[2].navigate === ERouter.Profile ? (
-                <Avatar
-                  src={userProfile.user?.avatarUrl}
-                  w={6}
-                  h={6}
-                  cursor="pointer"
-                />
-              ) : (
-                <Icon as={listLinks[2].icon} w={6} h={6} />
-              )}
-              <Text fontSize="xs">{listLinks[2].title}</Text>
-            </Flex>
-
-            <Flex
-              color={
-                location.pathname === listLinks[2].navigate ? 'teal' : 'initial'
-              }
-              alignItems="center"
-              flexDirection="column"
-              justifyContent="flex-end"
-              gap={1}
-              onClick={() => navigate(listLinks[2].navigate)}
-              cursor="pointer"
-            >
-              {listLinks[2].navigate === ERouter.Profile ? (
-                <Avatar
-                  src={userProfile.user?.avatarUrl}
-                  w={6}
-                  h={6}
-                  cursor="pointer"
-                />
-              ) : (
-                <Icon as={listLinks[2].icon} w={6} h={6} />
-              )}
-              <Text fontSize="xs">{listLinks[2].title}</Text>
-            </Flex>
-          </Stack>
-        </GridItem>
-        {/* <GridItem w="100%" h="10" bg="blue.500" /> */}
-        {/* <GridItem w="100%" h="10" bg="blue.500" /> */}
-      </Grid>
-      {/* <Grid w="100%" templateColumns="repeat(5, 1fr)" gap={6}>
-        {listLinks.map((link, index) => (
-          <GridItem
-          w='100%' h='10' bg='blue.500'
-            key={index}
-            // w="100%"
-            // h="100%"
-            display="flex"
+      <Flex w="100%" justifyContent="space-between" alignItems="center">
+        {listLinks.map((link) => (
+          <Flex
             color={location.pathname === link.navigate ? 'teal' : 'initial'}
-            alignItems="center"
-            flexDirection="column"
-            justifyContent="flex-end"
-            gap={1}
             onClick={() => navigate(link.navigate)}
-            cursor="pointer"
+            flexDirection="column"
+            alignItems="center"
+            gap={1}
           >
-            {link.navigate === ERouter.Profile ? (
-              <Avatar
-                src={userProfile.user?.avatarUrl}
-                w={6}
-                h={6}
-                cursor="pointer"
-              />
-            ) : (
-              <Icon as={link.icon} w={6} h={6} />
-            )}
-            <Text fontSize="xs">{link.title}</Text>
-          </GridItem>
+            <Icon as={link.icon} w={link?.title === 'Add' ? 12 : 6} h={link?.title === 'Add' ? 12 : 6} />
+            {link.title !== 'Add' && <Text fontSize="xs">{link?.title}</Text>}
+          </Flex>
         ))}
-      </Grid> */}
-    </Box>
+      </Flex>
+    </Stack>
   );
 };

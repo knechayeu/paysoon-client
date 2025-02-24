@@ -112,35 +112,8 @@ const CreateTransaction = () => {
   };
 
   return (
-    <Layout isLoading={isLoading}>
-      <Stack spacing={4}>
-        {/* <Stack spacing={4} flexDirection="row" overflowY="auto">
-          {Array.from({ length: 50 }, (_, i) => (
-            <Flex
-              key={i}
-              flexDirection="column"
-              alignItems="center"
-              gap={2}
-              onClick={() => handleSelectRoom(i)}
-            >
-              <Avatar size="lg" name="Писюн рум" variant="outline">
-                {!!selectedRoom?.[i] && (
-                  <AvatarBadge
-                    as={CheckIcon}
-                    color="white"
-                    borderColor="transparent"
-                    bg="black"
-                  />
-                )}
-              </Avatar>
-
-              <Text align="center" color="gray.500" fontSize="xs">
-                Писюн рум
-              </Text>
-            </Flex>
-          ))}
-        </Stack> */}
-
+    <Layout isLoading={isLoading} title="Внести оплату">
+      <Stack spacing={4} w="100%">
         <InputGroup>
           <InputLeftAddon onClick={onToggle}>BYN</InputLeftAddon>
           <Input type="number" placeholder="Введите сумму" />
